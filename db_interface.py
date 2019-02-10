@@ -20,7 +20,21 @@ def add_consumer(string_encoding):
     return consumer_id
 
 
-def add_employee_in_db(encoding):
+def add_employee_in_db(employee_id, encodings, name, manager, store_id, number, entry_time, exit_time):
+
+
+    cur = conn.cursor()
+    string_encoding = list(encodings)
+
+    entry_time = '{:02d}:00:00'.format(int(entry_time))
+    exit_time = '{:02d}:00:00'.format(int(exit_time))
+    cur.execute("INSERT INTO employee_attributes VALUES (%s, %s, %s, %s, %s, %s, 0, 0)", (employee_id, name, manager, store_id, entry_time, exit_time));
+
+    cur.execute("INSERT INTO employee_faces VALUES (%s, %s)", (employee_id, string_encoding))
+
+    cur.close()
+    conn.commit()
+    return employee_id
 
 
 
@@ -29,39 +43,39 @@ def find_employee_in_db(encoding):
     cur = conn.cursor()
     string_encoding = list(encoding)
 
-    cur.execute("SELECT EmployeeId, distance(encodings, %s) FROM employee_faces ORDER BY distance(employee_faces.encodings, %s) LIMIT 1", (string_encoding, string_encoding))
+    cur.execute("SELECT employeeId, distance(encodings, %s) FROM employee_faces ORDER BY distance(employee_faces.encodings, %s) LIMIT 1", (string_encoding, string_encoding))
     
     response = cur.fetchone()
     cur.close()
 
     if response is None:
-        return False
+        return -1, False
 
     else:
         employee_id, distance = response
 
-        if employee_id is None or (distance > config.FACE_THRESHOLD):
-            return True
+        print('CLOSEST EMPLOYEE : ', employee_id, ' : ', str(distance))
+
+        if employee_id is None or (distance < config.FACE_THRESHOLD):
+            return employee_id, True
 
         else:
-            return False
+            return -1, False
 
+def employee_sign_in(employee_id, time_stamp):
+    pass
 
-
+def employee_sign_out(employee_id, time_stamp):
+    pass
 
 def find_closest_face_in_db(encoding):
 
     cur = conn.cursor()
-    string_encoding = list(encoding) #",".join(list(map(lambda x: str(x), encoding)))
-
-    #print(string_encoding)
+    string_encoding = list(encoding)
 
     cur.execute("SELECT ConsumerId, distance(encodings, %s) FROM consumer_faces ORDER BY distance(consumer_faces.encodings, %s) LIMIT 1", (string_encoding, string_encoding))
-    #cur.execute(query)
-    
+   
     response = cur.fetchone()
-
-    #print(response)
 
     if response is None:
         cur.close()

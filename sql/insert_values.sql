@@ -4,7 +4,7 @@ INSERT INTO face_encodings VALUES ('132131', ARRAY[1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
 INSERT INTO dish_attributes VALUES ('dish1');
 INSERT INTO dish_attributes VALUES ('dish2');
-INSERT INTO store_attributes VALUES ('store1', 10);
+INSERT INTO store_attributes VALUES ('store1', 10, 'Bangalore');
 INSERT INTO store_menu VALUES ('store1', 'dish1', 20, 1);
 INSERT INTO store_menu VALUES ('store1', 'dish2', 10, 2);
 
@@ -24,6 +24,22 @@ INSERT INTO store_menu VALUES ('store1', 'dish5', 'pancake', 'worlds best pancak
 INSERT INTO store_menu VALUES ('store1', 'dish6', 'pizza', 'worlds best pizza', 'https://storage.googleapis.com/digital_menu/testing/store1/dish6.jpg', 'Snacks', 50.0, NULL, 4.6, 6);
 INSERT INTO store_menu VALUES ('store1', 'dish7', 'samosa', 'worlds best samosa', 'https://storage.googleapis.com/digital_menu/testing/store1/dish7.jpg', 'Snacks', 50.0, NULL, 4.6, 7);
 INSERT INTO store_menu VALUES ('store1', 'dish8', 'burger', 'worlds best burger', 'https://storage.googleapis.com/digital_menu/testing/store1/dish8.jpg', 'Snacks', 50.0, NULL, 4.6, 8);
+
+
+
+INSERT INTO employee_attributes VALUES ('1234', 'Royal', 'Royal', 'store1', '09:00', '17:00', 10, 8.5);
+INSERT INTO employee_attributes VALUES ('1235', 'Royal', 'Royal', 'store1', '09:00', '17:00', 10, 8.5);
+INSERT INTO employee_attributes VALUES ('1236', 'Royal', 'Royal', 'store1', '09:00', '17:00', 10, 8.5);
+
+INSERT INTO employee_register VALUES ('1234', '02-04-2019', '10:00', '19:00', 1, 1, '09:00:00');
+INSERT INTO employee_register VALUES ('1236', '02-04-2019', '10:00', '19:00', 1, 1, '09:00:00');
+INSERT INTO employee_register VALUES ('1235', '02-04-2019', '10:00', '19:00', 1, 1, '09:00:00');
+
+INSERT INTO employee_register VALUES ('1234', '02-05-2019', '09:00', '17:00', 0, 0, '08:00:00');
+INSERT INTO employee_register VALUES ('1236', '02-05-2019', '09:00', '17:00', 0, 0, '08:00:00');
+INSERT INTO employee_register VALUES ('1235', '02-05-2019', '09:00', '17:00', 0, 0, '08:00:00');
+
+
 
 
 

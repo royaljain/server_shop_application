@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Contact V13</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="static/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="static/css/main.css">
+<!--===============================================================================================-->
+</head>
+<style>
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+<body onload="init();">
+
+    <div id = "container" style = "width:100%">
+
+    <div style = "float:left; width:50%;">
+    
+    <button id="start" class="button" onclick="startWebcam();">Start WebCam</button>
+    <button id="stop" class="button" onclick="stopWebcam();">Stop WebCam </button> 
+    <button id="snap" class="button" onclick="snapshot();">Take Snapshot </button> 
+    <video onclick="snapshot(this);" width=400 height=200 id="video" controls autoplay></video>
+    <span class="contact100-form-title">Image</span>
+    <canvas  id="myCanvas" width="400" height="200"></canvas>  
+
+    </div>
+
+	<div class="container-contact100"  style = "float:left; width: 50%;>
+
+		<div class="wrap-contact100">
+			<form class="contact100-form validate-form" action=#>
+				<span class="contact100-form-title">
+					Details
+				</span>
+
+				<div class="wrap-input100">
+					<span class="label-input100">Name</span>
+					<input class="input100" type="text" name="name" placeholder="Name..." id="employee_name">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">Phone</span>
+					<input class="input100" type="tel" name="phone" placeholder="Phone Number..." id="employee_number">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">Manager</span>
+					<input class="input100" type="text" name="manager" placeholder="Manager Name..." id="employee_manager">
+					<span class="focus-input100"></span>
+				</div>
+
+
+				<div class="wrap-input100">
+					<span class="label-input100">Store</span>
+					<input class="input100" type="text" name="storeId" placeholder="Store Id..." id="employee_store">
+					<span class="focus-input100"></span>
+				</div>
+                                
+				<div style="display: none" class="wrap-input100 validate-input" data-validate="Name is required">
+					<span class="label-input100">Name</span>
+					<input class="input100" type="text" name="name" placeholder="Name..." id="employee_name">
+					<span class="focus-input100"></span>
+				</div>
+
+  				<div class="wrap-input100">
+					<span class="label-input100">Scheduled Time In</span>
+
+					  <select name="entryTime" id="employee_time_in">
+					    <option value="0">00:00 midnight</option>
+					    <option value="1">01:00 a.m</option>
+					    <option value="2">02:00 a.m</option>
+					    <option value="3">03:00 a.m</option>
+					    <option value="4">04:00 a.m</option>
+					    <option value="5">05:00 a.m</option>
+					    <option value="6">06:00 a.m</option>
+					    <option value="7">07:00 a.m</option>
+					    <option value="8">08:00 a.m</option>
+					    <option value="9">09:00 a.m</option>
+					    <option value="10">10:00 a.m</option>
+					    <option value="11">11:00 a.m</option>
+					    <option value="12">12:00 noon</option>
+					    <option value="13">01:00 p.m</option>
+					    <option value="14">02:00 p.m</option>
+					    <option value="15">03:00 p.m</option>
+					    <option value="16">04:00 p.m</option>
+					    <option value="17">05:00 p.m</option>
+					    <option value="18">06:00 p.m</option>
+					    <option value="19">07:00 p.m</option>
+					    <option value="20">08:00 p.m</option>
+					    <option value="21">09:00 p.m</option>
+					    <option value="22">10:00 p.m</option>
+					    <option value="23">11:00 p.m</option>
+					  </select>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">Scheduled Time Out</span>
+					  <select name="exitTime" id="employee_time_out">
+					    <option value="0">00:00 midnight</option>
+					    <option value="1">01:00 a.m</option>
+					    <option value="2">02:00 a.m</option>
+					    <option value="3">03:00 a.m</option>
+					    <option value="4">04:00 a.m</option>
+					    <option value="5">05:00 a.m</option>
+					    <option value="6">06:00 a.m</option>
+					    <option value="7">07:00 a.m</option>
+					    <option value="8">08:00 a.m</option>
+					    <option value="9">09:00 a.m</option>
+					    <option value="10">10:00 a.m</option>
+					    <option value="11">11:00 a.m</option>
+					    <option value="12">12:00 noon</option>
+					    <option value="13">01:00 p.m</option>
+					    <option value="14">02:00 p.m</option>
+					    <option value="15">03:00 p.m</option>
+					    <option value="16">04:00 p.m</option>
+					    <option value="17">05:00 p.m</option>
+					    <option value="18">06:00 p.m</option>
+					    <option value="19">07:00 p.m</option>
+					    <option value="20">08:00 p.m</option>
+					    <option value="21">09:00 p.m</option>
+					    <option value="22">10:00 p.m</option>
+					    <option value="23">11:00 p.m</option>
+					  </select>
+
+					<span class="focus-input100"></span>
+				</div>
+
+
+				<div class="container-contact100-form-btn">
+					<div class="wrap-contact100-form-btn">
+						<div class="contact100-form-bgbtn"></div>
+						<button class="contact100-form-btn" onclick="sendData()">
+							Send
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+    </div>
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="static/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/bootstrap/js/popper.js"></script>
+	<script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/daterangepicker/moment.min.js"></script>
+	<script src="static/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+<!--===============================================================================================-->
+	<script src="static/js/main.js"></script>
+
+<script>
+
+     
+      
+      navigator.getUserMedia = ( navigator.getUserMedia ||
+                             navigator.webkitGetUserMedia ||
+                             navigator.mozGetUserMedia ||
+                             navigator.msGetUserMedia);
+
+      var video;
+      var webcamStream;
+
+      function startWebcam() {
+        if (navigator.getUserMedia) {
+           navigator.getUserMedia (
+
+              // constraints
+              {
+                 video: true,
+                 audio: false
+              },
+
+              // successCallback
+              function(localMediaStream) {
+                 video = document.querySelector('video');
+                 video.srcObject = localMediaStream;
+                 webcamStream = localMediaStream;
+              },
+
+              // errorCallback
+              function(err) {
+                 console.log("The following error occured: " + err);
+              }
+           );
+        } else {
+           console.log("getUserMedia not supported");
+        }  
+      }
+
+      function stopWebcam() {
+          webcamStream.stop();
+      }
+      //---------------------
+      // TAKE A SNAPSHOT CODE
+      //---------------------
+      var canvas, ctx, image;
+
+      function init() {
+        // Get the canvas and obtain a context for
+        // drawing in it
+        canvas = document.getElementById("myCanvas");
+        ctx = canvas.getContext('2d');
+      }
+
+      function snapshot() {
+         // Draws current image from the video element into the canvas
+        ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+      }
+
+
+      function sendData() {
+         // Draws current image from the video element into the canvas
+        console.log("INPUT")
+        var name = document.getElementById("employee_name").value
+        var phone = document.getElementById("employee_number").value
+        var manager = document.getElementById("employee_manager").value
+        var store = document.getElementById("employee_store").value
+        var time_in = document.getElementById("employee_time_in").value
+        var time_out = document.getElementById("employee_time_out").value
+        var image = canvas.toDataURL();
+
+        console.log(name)
+        console.log(phone)
+        console.log(manager)
+        console.log(store)
+        console.log(time_in)
+        console.log(time_out)
+        console.log(image)
+        
+        //http://35.199.171.133:5001
+
+        var data = {'name': name, 'phone': phone, 'manager': manager,
+                    'store': store, 'time_in': time_in, 'time_out': time_out,
+                     'image': image}
+
+
+		console.log("About to run Ajax");
+
+		$.ajax({
+		        type: "POST",
+		        url: "/add_employee",
+		        crossDomain: true,
+		        data: JSON.stringify(data),
+		        dataType: 'json',
+		        contentType: 'application/json',
+		        success: function (response) {
+		            // do something with server response data
+		            console.log("SUCCESS")
+		            console.log(response);
+		    	    },
+		        error: function (err) {
+		            // handle your error logic here
+		            console.log("ERROR")
+		            console.log(err);
+		        }
+		    });
+
+		console.log("After running Ajax");
+
+        /*
+	    var formdata = new FormData();
+
+	    formdata.append('file', image);
+	    formdata.append('name', name);	   
+	    formdata.append('phone', phone);
+	    formdata.append('manager', manager);
+	    formdata.append('store', store);
+	    formdata.append('time_in', time_in);
+	    formdata.append('time_out', time_out);
+
+	    var xhr = new XMLHttpRequest();
+	    //xhr.open('POST', 'http://35.199.171.133:5001/add_employee');
+	    //xhr.open('POST', 'http://0.0.0.0:5001/add_employee');
+	    xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+		xhr.send('user=person&pwd=password&organization=place&requiredkey=key');
+	    //xhr.send(formdata);
+        */
+      }
+
+
+</script>
+
+</body>
+</html>
