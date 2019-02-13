@@ -50,10 +50,9 @@
     <div style = "float:left; width:50%;">
     
     <button id="start" class="button" onclick="startWebcam();">Start WebCam</button>
-    <button id="stop" class="button" onclick="stopWebcam();">Stop WebCam </button> 
     <button id="snap" class="button" onclick="snapshot();">Take Snapshot </button> 
     <video onclick="snapshot(this);" width=400 height=200 id="video" controls autoplay></video>
-    <span class="contact100-form-title">Image</span>
+    <span id="image_header" class="contact100-form-title"></span>
     <canvas  id="myCanvas" width="400" height="200"></canvas>  
 
     </div>
@@ -63,7 +62,7 @@
 		<div class="wrap-contact100">
 			<form class="contact100-form validate-form" action=#>
 				<span class="contact100-form-title">
-					Details
+					Create Employee Account
 				</span>
 
 				<div class="wrap-input100">
@@ -129,39 +128,15 @@
 					<span class="focus-input100"></span>
 				</div>
 
-				<div class="wrap-input100">
-					<span class="label-input100">Scheduled Time Out</span>
-					  <select name="exitTime" id="employee_time_out">
-					    <option value="0">00:00 midnight</option>
-					    <option value="1">01:00 a.m</option>
-					    <option value="2">02:00 a.m</option>
-					    <option value="3">03:00 a.m</option>
-					    <option value="4">04:00 a.m</option>
-					    <option value="5">05:00 a.m</option>
-					    <option value="6">06:00 a.m</option>
-					    <option value="7">07:00 a.m</option>
-					    <option value="8">08:00 a.m</option>
-					    <option value="9">09:00 a.m</option>
-					    <option value="10">10:00 a.m</option>
-					    <option value="11">11:00 a.m</option>
-					    <option value="12">12:00 noon</option>
-					    <option value="13">01:00 p.m</option>
-					    <option value="14">02:00 p.m</option>
-					    <option value="15">03:00 p.m</option>
-					    <option value="16">04:00 p.m</option>
-					    <option value="17">05:00 p.m</option>
-					    <option value="18">06:00 p.m</option>
-					    <option value="19">07:00 p.m</option>
-					    <option value="20">08:00 p.m</option>
-					    <option value="21">09:00 p.m</option>
-					    <option value="22">10:00 p.m</option>
-					    <option value="23">11:00 p.m</option>
-					  </select>
 
+                 		<div class="wrap-input100">
+					<span class="label-input100">Working Hours</span>
+					<input class="input100" type="number" name="workingHours" placeholder="Working Hours..." id="employee_working_hour">
 					<span class="focus-input100"></span>
 				</div>
 
 
+			
 				<div class="container-contact100-form-btn">
 					<div class="wrap-contact100-form-btn">
 						<div class="contact100-form-bgbtn"></div>
@@ -236,10 +211,7 @@
         }  
       }
 
-      function stopWebcam() {
-          webcamStream.stop();
-      }
-      //---------------------
+     //---------------------
       // TAKE A SNAPSHOT CODE
       //---------------------
       var canvas, ctx, image;
@@ -254,6 +226,7 @@
       function snapshot() {
          // Draws current image from the video element into the canvas
         ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+         document.getElementById("image_header").innerHTML = "Picture Taken";
       }
 
 
@@ -265,7 +238,7 @@
         var manager = document.getElementById("employee_manager").value
         var store = document.getElementById("employee_store").value
         var time_in = document.getElementById("employee_time_in").value
-        var time_out = document.getElementById("employee_time_out").value
+        var working_hour = document.getElementById("employee_working_hour").value
         var image = canvas.toDataURL();
 
         console.log(name)
@@ -273,13 +246,13 @@
         console.log(manager)
         console.log(store)
         console.log(time_in)
-        console.log(time_out)
+        console.log(working_hour)
         console.log(image)
         
         //http://35.199.171.133:5001
 
         var data = {'name': name, 'phone': phone, 'manager': manager,
-                    'store': store, 'time_in': time_in, 'time_out': time_out,
+                    'store': store, 'time_in': time_in, 'working_hours': working_hour,
                      'image': image}
 
 

@@ -2,11 +2,35 @@
 import config
 import psycopg2
 import uuid
+from datetime import datetime, date
+from utils import safe_run
+
 
 conn = psycopg2.connect(database=config.DATABASE, user = config.USER, 
     password = config.PASSWORD, host = config.HOST)
 
 
+
+@safe_run
+def add_dish_to_menu(dish_id, url, store_id, dish_name, dish_desc, dish_tag, dish_price, dish_position, dish_cat):
+
+    cur = conn.cursor()
+
+    cur.execute("SELECT * from dish_attributes WHERE dishId=%s", (dish_id,))
+    response = cur.fetchone()
+
+    if response is None:
+        cur.execute("INSERT INTO  dish_attributes VALUES (%s)", (dish_id,))
+
+
+    cur.execute("INSERT INTO store_menu VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 4.3, %s)", (store_id, dish_id, dish_name, dish_desc, url, dish_cat, dish_price, dish_tag, dish_position))
+    cur.close()
+
+    conn.commit()
+    return {'status': 'Success'}
+
+
+    
 
 def add_consumer(string_encoding):
 
@@ -20,15 +44,14 @@ def add_consumer(string_encoding):
     return consumer_id
 
 
-def add_employee_in_db(employee_id, encodings, name, manager, store_id, number, entry_time, exit_time):
+def add_employee_in_db(employee_id, encodings, name, manager, store_id, number, entry_time, working_hour):
 
 
     cur = conn.cursor()
     string_encoding = list(encodings)
 
     entry_time = '{:02d}:00:00'.format(int(entry_time))
-    exit_time = '{:02d}:00:00'.format(int(exit_time))
-    cur.execute("INSERT INTO employee_attributes VALUES (%s, %s, %s, %s, %s, %s, 0, 0)", (employee_id, name, manager, store_id, entry_time, exit_time));
+    cur.execute("INSERT INTO employee_attributes VALUES (%s, %s, %s, %s, %s, 0, 0, %s)", (employee_id, name, manager, store_id, entry_time, working_hour));
 
     cur.execute("INSERT INTO employee_faces VALUES (%s, %s)", (employee_id, string_encoding))
 
@@ -62,21 +85,116 @@ def find_employee_in_db(encoding):
         else:
             return -1, False
 
+@safe_run
+def add_consumer_attributes(consumer_id, money_spent, discount_saved, order_time):
+ 
+    cur = conn.cursor()
+    dt = oder_time.date()
+
+    cur.execute("SELECT * from  consumer_attributes where consumerId= %s", (consumer_id,))
+
+    consumerid, lastvisit, numberofvisits, moneyspent, discountsaved, companyid = cur.fetchone()
+
+    moneyspent += money_spent
+    discountsaved += discount_saved
+    numberofvisits += 1
+    lastvisit = dt 
+
+    cur.execute("UPDATE consumer_attributes SET moneyspent=%s, discountsaved=%s, numberofvisits=%s, lastvisit=%s where consumerId=%s", (moneyspent, discountsaved, numberofvisits, lastvisit));
+
+    cur.close()
+    conn.commit()
+
+
+    return {'status': 'Success'}
+
+
 def employee_sign_in(employee_id, time_stamp):
-    pass
+
+    cur = conn.cursor()
+    dt = time_stamp.date()
+    tm = time_stamp.time()
+
+    cur.execute("SELECT timein from employee_attributes WHERE employeeId=%s", (employee_id,))
+
+    scheduled_time = cur.fetchone()[0]
+    is_late = 0
+
+
+    if tm > scheduled_time:
+        is_late = 1
+
+    cur.execute("INSERT INTO employee_register VALUES (%s, %s, %s, NULL, %s, NULL, NULL)", (employee_id, dt, tm, is_late));
+
+    cur.close()
+    conn.commit()
+    return employee_id
+
+
+def diff_times_in_hours(t1, t2):
+    # caveat emptor - assumes t1 & t2 are python times, on the same day and t2 is after t1
+    h1, m1, s1 = t1.hour, t1.minute, t1.second
+    h2, m2, s2 = t2.hour, t2.minute, t2.second
+    t1_secs = s1 + 60 * (m1 + 60*h1)
+    t2_secs = s2 + 60 * (m2 + 60*h2)
+    return( t2_secs - t1_secs)/3600.0
+
+
 
 def employee_sign_out(employee_id, time_stamp):
-    pass
+ 
+    cur = conn.cursor()
+    dt = time_stamp.date()
+    tm = time_stamp.time()
+
+
+    print(employee_id, dt, tm)
+
+
+    is_overtime = 0
+
+    cur.execute("SELECT timein, workinghour, numberofdaysworking, averageworkinghour from employee_attributes WHERE employeeId=%s", (employee_id,))
+
+    timein, scheduledhours, numberofdaysworking, averageworkinghour = cur.fetchone()
+ 
+    cur.execute("SELECT intime from employee_register WHERE employeeId=%s and entrydate=%s", (employee_id, dt))
+
+    intime = cur.fetchone()[0]
+
+    work_time_interval = datetime.combine(date.min, tm) - datetime.combine(date.min, intime)
+
+    work_time = work_time_interval.total_seconds()/3600.0
+
+    if work_time > scheduledhours:
+        is_overtime = 1
+
+    new_numberofdaysworking = numberofdaysworking + 1
+    new_averageworkinghour = (numberofdaysworking*averageworkinghour + work_time) / new_numberofdaysworking
+
+    cur.execute("UPDATE employee_register SET outtime=%s, isovertime=%s, hoursworked=%s WHERE employeeId=%s and entrydate=%s", (tm, is_overtime,work_time_interval, employee_id, dt));
+    cur.execute("UPDATE employee_attributes SET numberofdaysworking=%s, averageworkinghour=%s WHERE employeeId=%s", (new_numberofdaysworking, new_averageworkinghour, employee_id));
+
+
+    cur.close()
+    conn.commit()
+
+    return employee_id
+
 
 def find_closest_face_in_db(encoding):
 
     cur = conn.cursor()
     string_encoding = list(encoding)
 
+
+    print(string_encoding)
+
     cur.execute("SELECT ConsumerId, distance(encodings, %s) FROM consumer_faces ORDER BY distance(consumer_faces.encodings, %s) LIMIT 1", (string_encoding, string_encoding))
    
     response = cur.fetchone()
 
+
+    print(response)
     if response is None:
         cur.close()
         return add_consumer(string_encoding), True
@@ -97,7 +215,6 @@ def get_default_menu(store_id):
 
     cur = conn.cursor()
     cur.execute("SELECT *  FROM store_menu WHERE storeid = %s", (store_id,))
-    #cur.execute(query)
 
     responses = cur.fetchall()
 

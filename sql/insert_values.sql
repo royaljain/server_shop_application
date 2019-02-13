@@ -19,6 +19,36 @@ INSERT INTO dish_attributes VALUES ('dish5');
 INSERT INTO dish_attributes VALUES ('dish6');
 INSERT INTO dish_attributes VALUES ('dish7');
 INSERT INTO dish_attributes VALUES ('dish8');
+INSERT INTO dish_attributes VALUES ('dish9');
+INSERT INTO dish_attributes VALUES ('dish10');
+INSERT INTO dish_attributes VALUES ('dish11');
+INSERT INTO dish_attributes VALUES ('dish12');
+INSERT INTO dish_attributes VALUES ('dish13');
+INSERT INTO dish_attributes VALUES ('dish14');
+INSERT INTO dish_attributes VALUES ('dish15');
+INSERT INTO dish_attributes VALUES ('dish16');
+INSERT INTO store_menu VALUES ('store1', 'dish9', 20, 8);
+INSERT INTO store_menu VALUES ('store1', 'dish10', 10, 9);
+INSERT INTO store_menu VALUES ('store1', 'dish11', 20, 10);
+INSERT INTO store_menu VALUES ('store1', 'dish12', 10, 11);
+INSERT INTO store_menu VALUES ('store1', 'dish13', 20, 12);
+INSERT INTO store_menu VALUES ('store1', 'dish14', 10, 13);
+INSERT INTO store_menu VALUES ('store1', 'dish15', 20, 14);
+INSERT INTO store_menu VALUES ('store1', 'dish16', 10, 15);
+
+INSERT INTO store_menu VALUES ('store1', 'dish9', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, 'Must Try', 4.6, 8);
+INSERT INTO store_menu VALUES ('store1', 'dish10', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, NULL, 4.6, 9);
+INSERT INTO store_menu VALUES ('store1', 'dish11', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, NULL, 4.6, 10);
+INSERT INTO store_menu VALUES ('store1', 'dish12', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, NULL, 4.6, 11);
+IINSERT INTO store_menu VALUES ('store1', 'dish13', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, NULL, 4.6, 12);
+INSERT INTO store_menu VALUES ('store1', 'dish14', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, 'BestSeller', 4.6, 13);
+INSERT INTO store_menu VALUES ('store1', 'dish15', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, NULL, 4.6, 14);
+INSERT INTO store_menu VALUES ('store1', 'dish16', 'coffee', 'worlds best coffee', 'https://storage.googleapis.com/digital_menu/testing/store1/dish1.jpg', 'Beverage', 50.0, NULL, 4.6, 15);
+I
+
+
+
+
 
 INSERT INTO store_menu VALUES ('store1', 'dish5', 'pancake', 'worlds best pancake', 'https://storage.googleapis.com/digital_menu/testing/store1/dish5.jpg', 'Snacks', 50.0, NULL, 4.6, 5);
 INSERT INTO store_menu VALUES ('store1', 'dish6', 'pizza', 'worlds best pizza', 'https://storage.googleapis.com/digital_menu/testing/store1/dish6.jpg', 'Snacks', 50.0, NULL, 4.6, 6);
