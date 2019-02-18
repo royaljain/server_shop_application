@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Add Dish</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="static/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="static/css/main.css">
+<!--===============================================================================================-->
+</head>
+<style>
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+<body>
+
+	<div class="container-contact100"  style = "float:left; width: 50%;">
+		<div class="wrap-contact100">
+			<form class="contact100-form validate-form"  method="post" action="" id="dataForm" enctype="multipart/form-data">
+				<span class="contact100-form-title">
+					Add dish
+				</span>
+
+				<div class="wrap-input100 validate-input" data-validate="Name is required">
+					<span class="label-input100">DishId</span>
+					<input class="input100" type="text" name="DishId" placeholder="DishId..." id="dish_id">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">StoreIds</span>
+					<input class="input100" type="text" name="StoreIds" placeholder="store1,store2,..." id="store_ids">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">Dish Name</span>
+					<input class="input100" type="text" name="DishName" placeholder="Dish Name..." id="dish_name">
+					<span class="focus-input100"></span>
+				</div>
+
+
+
+				<div class="wrap-input100">
+					<span class="label-input100">Dish Description</span>
+					<input class="input100" type="text" name="DishDescription" placeholder="Dish Description..." id="dish_desc">
+					<span class="focus-input100"></span>
+				</div>
+
+
+
+				<div class="wrap-input100">
+					<span class="label-input100">Tag</span>
+					<input class="input100" type="text" name="DishTag" placeholder="Dish Tag..." id="dish_tag">
+					<span class="focus-input100"></span>
+				</div>
+
+
+
+				<div class="wrap-input100">
+					<span class="label-input100">Price</span>
+					<input class="input100" type="number" name="DishPrice" placeholder="Dish Price..." id="dish_price">
+					<span class="focus-input100"></span>
+				</div>
+
+
+
+				<div class="wrap-input100">
+					<span class="label-input100">Position on Menu</span>
+					<input class="input100" type="number" name="DishPosition" placeholder="Dish Position..." id="dish_position">
+					<span class="focus-input100"></span>
+				</div>
+
+
+				<div class="wrap-input100">
+					<span class="label-input100">Dish Category</span>
+					  <select name="DishCategory" id="dish_cat">
+					    <option value="snacks">Snacks</option>
+					    <option value="hot_beverage">Hot Beverages</option>
+					    <option value="cold_beverage">Cold Beverages</option>
+					 </select>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100">
+					<span class="label-input100">Dish Image</span>
+						<input type="file" name="pic" id="fileSelector">
+					<span class="focus-input100"></span>
+				</div>
+
+
+
+				<div class="container-contact100-form-btn">
+					<div class="wrap-contact100-form-btn">
+						<div class="contact100-form-bgbtn"></div>
+						<button class="contact100-form-btn" type="submit" id="sub-comfirm">
+							Send
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="static/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/bootstrap/js/popper.js"></script>
+	<script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/daterangepicker/moment.min.js"></script>
+	<script src="static/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="static/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+<!--===============================================================================================-->
+	<script src="static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script>
+/*
+
+$(document).ready(function(){
+    $('#dataForm').on('submit', function(e) {
+        e.preventDefault();
+        SendData();
+    });
+});
+
+*/
+
+    var form_data = null;// global var to store file info
+    $(document).ready(function(){
+        $('#dataForm').on('submit', function(e) {
+            e.preventDefault();
+            console.log(form_data)
+            SendData();
+        });
+
+        $('#fileSelector').on('change',function(ev){
+            form_data = null;
+            form_data = new FormData();
+
+            $.each(ev.target.files, function(key, value)
+            {
+                console.log(value)
+                form_data.append('dishImage', value);                 
+            });
+       });
+      });
+
+      
+      function SendData() {
+         // Draws current image from the video element into the canvas
+
+        /*
+        console.log("INPUT")
+        var dish_id = document.getElementById("dish_id").value
+        var store_ids = document.getElementById("store_ids").value
+        var dish_name = document.getElementById("dish_name").value
+        var dish_desc = document.getElementById("dish_desc").value
+        var dish_tag = document.getElementById("dish_tag").value
+        var dish_price = document.getElementById("dish_price").value
+        var dish_position = document.getElementById("dish_position").value
+        var dish_cat = document.getElementById("dish_cat").value
+	//var dish_image = document.getElementById("dish_image").value
+
+        //http://35.199.171.133:5001
+
+        //var blobFile = document.getElementById("dish_image").files[0] //$('#dish_image').files[0];
+        var blobFile = ($("#dish_image"))[0].files[0]   
+
+        var data = {'dish_id': dish_id, 'store_ids': store_ids, 'dish_name': dish_name, 'dish_desc': dish_desc, 'dish_tag': dish_tag, 'dish_price': dish_price, 'dish_position': dish_position, 'dish_cat': dish_cat, 'dish_image': blobFile} //dish_image}
+
+        */
+        //var formData = JSON.stringify($("#myForm").serializeArray());
+        //var formData = new FormData($("#dataForm")[0]);
+
+        var store_ids = document.getElementById("store_ids").value
+        var dish_name = document.getElementById("dish_name").value
+        var dish_desc = document.getElementById("dish_desc").value
+        var dish_tag = document.getElementById("dish_tag").value
+        var dish_price = document.getElementById("dish_price").value
+        var dish_position = document.getElementById("dish_position").value
+        var dish_cat = document.getElementById("dish_cat").value
+	
+        var dish_id = document.getElementById("dish_id").value
+
+        form_data.append('dish_id', dish_id)
+        form_data.append('store_ids', store_ids)
+        form_data.append('dish_name', dish_name)
+        form_data.append('dish_desc', dish_desc)
+        form_data.append('dish_tag', dish_tag)
+        form_data.append('dish_price', dish_price)
+        form_data.append('dish_position', dish_position)
+        form_data.append('dish_cat', dish_cat)
+
+
+
+
+
+
+        for (var key of form_data.entries()) {
+            console.log(key[0] + ', ' + key[1]);
+        }
+		console.log("About to run Ajax");
+            	$.ajax({
+		        type: "POST",
+		        url: "/add_dish",
+		        crossDomain: true,
+		        data: form_data,//formData, //JSON.stringify(data),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+		        success: function (response) {
+		            // do something with server response data
+		            console.log("SUCCESS")
+		            console.log(response);
+		    	    },
+		        error: function (err) {
+		            // handle your error logic here
+		            console.log("ERROR")
+		            console.log(err);
+		        }
+		    });
+
+		console.log("After running Ajax");
+
+	}
+
+</script>
+
+</body>
+</html>
+
