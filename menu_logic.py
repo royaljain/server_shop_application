@@ -3,7 +3,8 @@ import db_interface
 import json
 from utils import safe_run
 from gcloud import storage
-
+from datetime import datetime
+import pytz
 
 def add_dish(file_path, dish_id, store_ids, dish_name, dish_desc, dish_tag, dish_price, dish_position, dish_cat):
     bucket_name = 'digital_menu'
@@ -21,7 +22,6 @@ def add_dish(file_path, dish_id, store_ids, dish_name, dish_desc, dish_tag, dish
         db_interface.add_dish_to_menu(dish_id, url, store_id, dish_name, dish_desc, dish_tag, dish_price, dish_position, dish_cat)
 
     return dish_id
-
 
 
 def compute_dish_discount(consumer_id, company_id, store_id):
@@ -44,11 +44,25 @@ def compute_dish_discount(consumer_id, company_id, store_id):
     return discount_dictionary
 
 
+@safe_run
 def store_order(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time):
 
-    discount_saved = sum(actual_prices)
+
+    time_stamp = float(order_time) / 1000.0
+    time_stamp = datetime.fromtimestamp(time_stamp, tz=pytz.utc)
+    tz = pytz.timezone('Asia/Kolkata')
+    time_stamp = time_stamp.astimezone(tz)
+
+    selling_prices = list(map(lambda x: float(x), selling_prices))
+    actual_prices = list(map(lambda x: float(x), actual_prices))
+
+
+    discount_saved = sum(actual_prices) - sum(selling_prices)
     money_spent = sum(selling_prices)
-    return db_interface.add_consumer_attributes(consumer_id, money_spent, discount_saved, order_time)
+    db_interface.add_consumer_attributes(consumer_id, money_spent, discount_saved, time_stamp)
+    db_interface.store_order_details(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, time_stamp)
+
+    return json.dumps({'status': 'Success'})
 
 
 def compute_dish_position(consumer_id):
@@ -57,7 +71,13 @@ def compute_dish_position(consumer_id):
 
 
 def apply_coupon(coupon_id):
-    return json.dumps({'Valid': 'Success', 'Discount': 7})
+
+    discount = db_interface.find_coupon(coupon_id)
+
+    if discount == -1:
+        return json.dumps({'success': 'False', 'discount': 0})
+   
+    return json.dumps({'success': 'True', 'discount': discount[0]})
 
 
 
@@ -95,6 +115,12 @@ def get_default_discount(dishes):
 
 def compute_menu_response(file_stream, store_id):
     encodings = image_processing.get_encodings(file_stream)
+
+    if len(encodings) == 0:
+        return json.dumps({'proceedToMenu': False, 'customerId': -1, 'dishList': [], 'validImage': False})
+
+
+
     consumer_id, new_user = db_interface.find_closest_face_in_db(encodings)
     default_menu = db_interface.get_default_menu(store_id)
 
@@ -102,13 +128,17 @@ def compute_menu_response(file_stream, store_id):
 
     default_discount = get_default_discount(dishes)
 
-    return json.dumps({'customerId': consumer_id, 'dishList': default_discount})
+    proceedToMenu = True
+
+    if new_user:
+        proceedToMenu = False
+
+    return json.dumps({'proceedToMenu': proceedToMenu, 'customerId': consumer_id, 'dishList': default_discount, 'validImage': True})
 
     company_id = db_interface.get_consumer_company(consumer_id)
     discount_dictionary = {}
 
-    if not new_user:
-        discount_dictionary = compute_dish_discount(consumer_id, company_id, store_id)
+    discount_dictionary = compute_dish_discount(consumer_id, company_id, store_id)
 
     dish_count = compute_dish_position(consumer_id)
 
@@ -141,4 +171,4 @@ def compute_menu_response(file_stream, store_id):
 
         response.append(dish_dic)
 
-    return json.dumps(response)
+    return json.dumps({'proceedToMenu': proceedToMenu, 'customerId': consumer_id, 'dishList': response, 'validImage': True})

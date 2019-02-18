@@ -10,7 +10,7 @@ import logging
 import sys
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 app = Flask(__name__)
 
 
@@ -57,8 +57,7 @@ def add_dish():
 
     finally:
         try:
-            pass
-            #os.remove(file_path)
+            os.remove(file_path)
         except:
             pass
 
@@ -99,14 +98,12 @@ def add_employee():
         return add_employee_to_db(employee_id, file_path, name, manager, store, entry_time, working_hours, phone)
 
     except Exception as e:
-        print(e)
         return json.dumps({'employeeAddition': False, 'employeeId': '-1'})
 
 
     finally:
         try:
             pass
-            #os.remove(file_path)
         except:
             pass
 
@@ -130,9 +127,9 @@ def process_image():
         # The image file seems valid! Detect faces and return the result.
         store_id = request.args.get('storeId')
         response = menu_logic.compute_menu_response(file, store_id)
-        print(response)
 
-
+        logging.info('Process Image Response : \n ' + response) 
+        
         return response
 
 @timeit
@@ -173,14 +170,18 @@ def process_employee_signout():
 
 
 @timeit
-@app.route('/store_details', methods=['POST'])
+@app.route('/save_order', methods=['POST'])
 def store_details():
-    store_id = request.args.get('storeId')
-    consumer_id = request.args.get('customerId')
-    list_of_dishes = request.args.get('dishIds')
-    actual_prices = request.args.get('actualPrices')
-    selling_prices = request.args.get('sellingPrices')
-    order_time = request.args.get('timestamp')
+
+    content = request.json
+
+    
+    store_id = content['storeId']
+    consumer_id = content['customerId']
+    list_of_dishes = content['dishIdList']
+    actual_prices = content['actualPriceList']
+    selling_prices = content['sellingPriceList']
+    order_time = content['timeStamp']
  
     response = menu_logic.store_order(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time)
 
@@ -189,7 +190,7 @@ def store_details():
 @timeit
 @app.route('/apply_coupon', methods=['POST'])
 def process_coupons():
-    coupon_id = request.args.get('coupon')
+    coupon_id = request.args.get('couponString')
     response = menu_logic.apply_coupon(coupon_id)
 
     return response

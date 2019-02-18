@@ -11,6 +11,16 @@ conn = psycopg2.connect(database=config.DATABASE, user = config.USER,
 
 
 
+def find_coupon(coupon_id):
+    cur = conn.cursor()
+    cur.execute("SELECT discount from coupon_attributes WHERE couponId=%s", (coupon_id,))
+    response = cur.fetchone()
+    if response is None:
+        return -1
+    return response
+
+
+
 @safe_run
 def add_dish_to_menu(dish_id, url, store_id, dish_name, dish_desc, dish_tag, dish_price, dish_position, dish_cat):
 
@@ -89,7 +99,7 @@ def find_employee_in_db(encoding):
 def add_consumer_attributes(consumer_id, money_spent, discount_saved, order_time):
  
     cur = conn.cursor()
-    dt = oder_time.date()
+    dt = order_time.date()
 
     cur.execute("SELECT * from  consumer_attributes where consumerId= %s", (consumer_id,))
 
@@ -100,7 +110,26 @@ def add_consumer_attributes(consumer_id, money_spent, discount_saved, order_time
     numberofvisits += 1
     lastvisit = dt 
 
-    cur.execute("UPDATE consumer_attributes SET moneyspent=%s, discountsaved=%s, numberofvisits=%s, lastvisit=%s where consumerId=%s", (moneyspent, discountsaved, numberofvisits, lastvisit));
+    cur.execute("UPDATE consumer_attributes SET moneyspent=%s, discountsaved=%s, numberofvisits=%s, lastvisit=%s where consumerId=%s", (moneyspent, discountsaved, numberofvisits, lastvisit, consumerid));
+
+    cur.close()
+    conn.commit()
+
+
+    return {'status': 'Success'}
+
+
+@safe_run
+def store_order_details(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time):
+ 
+    cur = conn.cursor()
+    order_date = order_time.date()
+    order_time = order_time.time()
+
+    order_id = str(uuid.uuid1())
+
+    for i, dish_id in enumerate(list_of_dishes):
+        cur.execute("INSERT INTO order_details VALUES (%s, %s, %s, %s, %s, %s, NULL, %s, %s);", (order_id, consumer_id, store_id, dish_id, selling_prices[i], actual_prices[i]-selling_prices[i], order_date, order_time));
 
     cur.close()
     conn.commit()
@@ -148,9 +177,7 @@ def employee_sign_out(employee_id, time_stamp):
     tm = time_stamp.time()
 
 
-    print(employee_id, dt, tm)
-
-
+    
     is_overtime = 0
 
     cur.execute("SELECT timein, workinghour, numberofdaysworking, averageworkinghour from employee_attributes WHERE employeeId=%s", (employee_id,))
@@ -187,14 +214,11 @@ def find_closest_face_in_db(encoding):
     string_encoding = list(encoding)
 
 
-    print(string_encoding)
-
     cur.execute("SELECT ConsumerId, distance(encodings, %s) FROM consumer_faces ORDER BY distance(consumer_faces.encodings, %s) LIMIT 1", (string_encoding, string_encoding))
    
     response = cur.fetchone()
 
 
-    print(response)
     if response is None:
         cur.close()
         return add_consumer(string_encoding), True
@@ -261,7 +285,7 @@ def get_store_discount(store_id):
     discount_dictionary = {}
 
     for response in responses:
-        discount_dictionary[response[0]] = response[2]
+        discount_dictionary[response[1]] = response[2]
 
     return discount_dictionary
 
@@ -278,15 +302,18 @@ def get_consumer_discount(consumer_id):
     discount_dictionary = {}
 
     for response in responses:
-        discount_dictionary[response[0]] = response[2]
+        discount_dictionary[response[1]] = response[2]
 
     return discount_dictionary
 
 
 def get_company_discount(company_id):
 
+    if company_id is None:
+        return 0
+
     cur = conn.cursor()
-    cur.execute("SELECT *  FROM company_discount WHERE Company_id = %s", (company_id,))
+    cur.execute("SELECT *  FROM company_discount WHERE companyId=%s", (company_id,))
 
     response = cur.fetchone()
 
@@ -302,7 +329,7 @@ def get_company_discount(company_id):
 
 def get_dish_count(consumer_id):
     cur = conn.cursor()
-    cur.execute("SELECT *  FROM consumer_dish_count WHERE ConsumerId = %s", (consumer_id,))
+    cur.execute("SELECT dishId, COUNT(*) from order_details WHERE consumerId=%s GROUP BY dishId;", (consumer_id,))
 
     responses = cur.fetchall()
 
@@ -311,7 +338,7 @@ def get_dish_count(consumer_id):
     dish_count = {}
 
     for response in responses:
-        dish_count[response[1]] = response[2]
+        dish_count[response[0]] = response[1]
 
     return dish_count
 
