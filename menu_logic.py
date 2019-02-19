@@ -5,6 +5,28 @@ from utils import safe_run
 from gcloud import storage
 from datetime import datetime
 import pytz
+import shutil
+import logging
+import uuid
+
+def shop_server_request(store_id, order_id, consumer_id, list_of_dishes, selling_prices):
+
+    texts = []
+
+    dish_mapping = db_interface.get_dish_mapping(store_id)
+
+    for i in range(0, len(list_of_dishes)):
+        texts.append("{} : {}".format(dish_mapping[list_of_dishes[i]], selling_prices[i]))
+
+    total = sum(list(map(lambda x: float(x), selling_prices)))
+
+    texts.append("Total : {}".format(total))
+
+
+    file_path = "./static/images/consumers/{}.png".format(consumer_id)
+    text = "<br>".join(texts)
+    return {"image_link": file_path, "text": text, "order_id": order_id}
+
 
 def add_dish(file_path, dish_id, store_ids, dish_name, dish_desc, dish_tag, dish_price, dish_position, dish_cat):
     bucket_name = 'digital_menu'
@@ -45,7 +67,7 @@ def compute_dish_discount(consumer_id, company_id, store_id):
 
 
 @safe_run
-def store_order(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time):
+def store_order(order_id, store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time):
 
 
     time_stamp = float(order_time) / 1000.0
@@ -60,7 +82,7 @@ def store_order(store_id, consumer_id, list_of_dishes, actual_prices, selling_pr
     discount_saved = sum(actual_prices) - sum(selling_prices)
     money_spent = sum(selling_prices)
     db_interface.add_consumer_attributes(consumer_id, money_spent, discount_saved, time_stamp)
-    db_interface.store_order_details(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, time_stamp)
+    db_interface.store_order_details(order_id, store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, time_stamp)
 
     return json.dumps({'status': 'Success'})
 
@@ -114,15 +136,27 @@ def get_default_discount(dishes):
 
 
 def compute_menu_response(file_stream, store_id):
+
+    rand_str = str(uuid.uuid1())
+    tmp_file_path = "./tmp/consumers/{}.png".format(rand_str)
+    #file_stream.save(tmp_file_path)
+
+
     encodings = image_processing.get_encodings(file_stream)
 
     if len(encodings) == 0:
         return json.dumps({'proceedToMenu': False, 'customerId': -1, 'dishList': [], 'validImage': False})
 
-
+    
 
     consumer_id, new_user = db_interface.find_closest_face_in_db(encodings)
     default_menu = db_interface.get_default_menu(store_id)
+
+
+    new_file_path =  "./static/images/consumers/{}.png".format(consumer_id)
+    #shutil.move(tmp_file_path, new_file_path)
+
+    logging.info("CONSUMER : "  + consumer_id)
 
     dishes = list(map(lambda x: x['dishId'], default_menu))
 

@@ -1,9 +1,9 @@
 
 $(document).ready(function(){
     //connect to the socket server.
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
     var numbers_received = [];
-
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+ 
     //receive details from server
     socket.on('my-image-event1', function(msg) {
         console.log("Received Link" + msg.image_link);
@@ -38,16 +38,19 @@ $(document).ready(function(){
 });
 
 function FirstServed(){
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
     document.getElementById("imageid1").src="static/images/icons/default_female.png";
     document.getElementById("textid1").innerHTML="Default ";
     socket.emit('empty_div_1');}
 
 function SecondServed(){
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
     document.getElementById("imageid2").src="static/images/icons/default_male.png";
     document.getElementById("textid2").innerHTML="Default ";
     socket.emit('empty_div_2');}
 
 function ThirdServed(){
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
     document.getElementById("imageid3").src="static/images/icons/default_female.png";
     document.getElementById("textid3").innerHTML="Default ";
     socket.emit('empty_div_3');}

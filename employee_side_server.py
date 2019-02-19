@@ -107,18 +107,18 @@ class RandomThread(Thread):
 
 @socketio.on('empty_div_1', namespace='/test')
 def func_empty_div1():
-    global empty_div_1
-    empty_div_1 = True
+    global empty_div1
+    empty_div1 = True
 
 @socketio.on('empty_div_2', namespace='/test')
 def func_empty_div2():
-    global empty_div_2
-    empty_div_2 = True
+    global empty_div2
+    empty_div2 = True
 
 @socketio.on('empty_div_3', namespace='/test')
-def func_empty_div3t():
-    global empty_div_3
-    empty_div_3 = True
+def func_empty_div3():
+    global empty_div3
+    empty_div3 = True
 
 
 @app.route('/completed_orders_page')
@@ -163,5 +163,5 @@ def favicon():
 
 
 if __name__ == "__main__":
-    socketio.run(app, port=5002)
+    socketio.run(app, host='0.0.0.0', port=5002)
     #app.run(host='0.0.0.0', port=5001, debug=True)

@@ -8,7 +8,8 @@ from base64 import decodestring
 import base64
 import logging
 import sys
-
+import uuid
+import requests
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 app = Flask(__name__)
@@ -182,9 +183,15 @@ def store_details():
     actual_prices = content['actualPriceList']
     selling_prices = content['sellingPriceList']
     order_time = content['timeStamp']
- 
-    response = menu_logic.store_order(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time)
+    order_id = str(uuid.uuid1())
 
+
+    response = menu_logic.store_order(order_id, store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time)
+
+    req_data = menu_logic.shop_server_request(store_id, order_id, consumer_id, list_of_dishes, selling_prices)
+    print(req_data)
+    r = requests.post("http://0.0.0.0:5002/add_order", json=req_data)
+    
     return response
 
 @timeit

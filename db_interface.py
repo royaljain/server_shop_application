@@ -10,6 +10,18 @@ conn = psycopg2.connect(database=config.DATABASE, user = config.USER,
     password = config.PASSWORD, host = config.HOST)
 
 
+def get_dish_mapping(store_id):
+    cur = conn.cursor()
+    cur.execute("SELECT dishId, dishName from store_menu WHERE storeId=%s", (store_id,))
+    responses = cur.fetchall()
+
+    dish_mapping = {}
+
+    for response in responses:
+        dish_mapping[response[0]] = response[1]
+
+    return dish_mapping
+
 
 def find_coupon(coupon_id):
     cur = conn.cursor()
@@ -120,13 +132,11 @@ def add_consumer_attributes(consumer_id, money_spent, discount_saved, order_time
 
 
 @safe_run
-def store_order_details(store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time):
+def store_order_details(order_id, store_id, consumer_id, list_of_dishes, actual_prices, selling_prices, order_time):
  
     cur = conn.cursor()
     order_date = order_time.date()
     order_time = order_time.time()
-
-    order_id = str(uuid.uuid1())
 
     for i, dish_id in enumerate(list_of_dishes):
         cur.execute("INSERT INTO order_details VALUES (%s, %s, %s, %s, %s, %s, NULL, %s, %s);", (order_id, consumer_id, store_id, dish_id, selling_prices[i], actual_prices[i]-selling_prices[i], order_date, order_time));
