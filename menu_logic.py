@@ -137,33 +137,27 @@ def get_default_discount(dishes):
 
 def compute_menu_response(file_stream, store_id):
 
-    rand_str = str(uuid.uuid1())
-    tmp_file_path = "./tmp/consumers/{}.png".format(rand_str)
-    #file_stream.save(tmp_file_path)
-
-
-    encodings = image_processing.get_encodings(file_stream)
-
-    if len(encodings) == 0:
-        return json.dumps({'proceedToMenu': False, 'customerId': -1, 'dishList': [], 'validImage': False})
-
-    
-
-    consumer_id, new_user = db_interface.find_closest_face_in_db(encodings)
+    rand_str = '0000-0000-0000-0000'#str(uuid.uuid1())
     default_menu = db_interface.get_default_menu(store_id)
-
-
-    new_file_path =  "./static/images/consumers/{}.png".format(consumer_id)
-    #shutil.move(tmp_file_path, new_file_path)
-
-    logging.info("CONSUMER : "  + consumer_id)
-
     dishes = list(map(lambda x: x['dishId'], default_menu))
-
     default_discount = get_default_discount(dishes)
 
-    proceedToMenu = True
+    tmp_file_path =  "./static/images/consumers/{}.png".format(rand_str)
+    file_stream.save(tmp_file_path)
+ 
+    encodings = image_processing.get_encodings(file_stream)
+ 
+    if len(encodings) == 0:
+        return json.dumps({'proceedToMenu': True, 'customerId': rand_str, 'dishList': default_discount, 'validImage': True})
 
+
+    proceedToMenu = True
+    consumer_id, new_user = db_interface.find_closest_face_in_db(encodings)
+    logging.info("CONSUMER : "  + consumer_id)
+    new_file_path =  "./static/images/consumers/{}.png".format(consumer_id)
+    shutil.move(tmp_file_path, new_file_path)
+    #file_stream.save(new_file_path)
+ 
     if new_user:
         proceedToMenu = False
 

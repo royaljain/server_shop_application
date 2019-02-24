@@ -26,11 +26,11 @@ for photo in employee_photos:
     name = names.get_first_name()
     manager =  names.get_first_name()
     store = stores[randint(0, 2)]
-    time = randint(1, 10)
+    ntime = randint(1, 10)
     working_hours = randint(8, 12)
     phone = str(uuid.uuid1())
-    add_employee_to_db(employee_id, photo, name, manager, store, time, working_hours, phone)
-
+    add_employee_to_db(employee_id, photo, name, manager, store, ntime, working_hours, phone)
+'''
 
 
 for photo in employee_photos:
@@ -55,8 +55,6 @@ for photo in employee_photos:
             pass
 
 '''
-
-
 import json
 
 consumer_photos = glob('consumers/*')
@@ -87,4 +85,4 @@ for photo in consumer_photos:
 
         menu_logic.store_order(order_id, store, consumer_id, list_of_dishes, list_of_actual_prices, 
             list_of_selling_prices, order_time)
-
+'''
