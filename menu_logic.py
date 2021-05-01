@@ -8,6 +8,7 @@ import pytz
 import shutil
 import logging
 import uuid
+import pandas
 
 def shop_server_request(store_id, order_id, consumer_id, list_of_dishes, selling_prices):
 
